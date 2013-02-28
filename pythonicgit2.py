@@ -29,7 +29,7 @@ class Repository(object):
 
     @property
     def branches_dict(self):
-        return self.ref_dict(self.branches_iter())
+        return self.ref_dict(self.branches_iter)
 
     @property
     def tags_iter(self):
@@ -41,4 +41,4 @@ class Repository(object):
 
     @property
     def tags_dict(self):
-        return self.ref_dict(self.tags_iter())
+        return self.ref_dict(self.tags_iter)
