@@ -30,4 +30,8 @@ class Repository(object):
     def tags_iter(self):
         return self.ref_iter('refs/tags/')
 
+    def tags(self):
+        return [t for t in self.tags_iter]
 
+    def tags_dict(self):
+        return self.ref_dict(self.tags_iter())
