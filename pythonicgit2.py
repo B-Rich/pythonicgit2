@@ -12,7 +12,7 @@ class Repository(object):
 
     def ref_iter(self, prefix):
         return (b[len(prefix):] for b in self._raw_repo.listall_references()
-            if b.startswith(prefix))
+                if b.startswith(prefix))
 
     def ref_dict(self, ref_iter):
         return dict(((r, self._raw_repo.lookup_reference(r).hex)
