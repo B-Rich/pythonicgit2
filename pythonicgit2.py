@@ -10,9 +10,12 @@ class Repository(object):
         raw = pg2.init_repository(path, bare)
         return Repository(raw.path)
 
+    def ref_iter(self, prefix):
+        return (b[len(prefix):] for b in self._raw_repo.listall_references()
+            if b.startswith(prefix))
+
     def branches_iter(self):
-        return (b[11:] for b in self._raw_repo.listall_references()
-            if b.startswith('refs/heads/'))
+        return self.ref_iter('refs/heads/')
 
     def branches(self):
         return [b for b in self.branches_iter]
@@ -20,3 +23,8 @@ class Repository(object):
     def branches_dict(self):
         return dict(((b[11:], self._raw_repo.lookup_reference(b).hex)
                     for b in self.branches_iter))
+
+    def tags_iter(self):
+        return self.ref_iter('refs/tags/')
+
+
