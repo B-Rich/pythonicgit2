@@ -1,5 +1,6 @@
 import pygit2 as pg2
 
+
 class Repository(object):
 
     def __init__(self, path):
