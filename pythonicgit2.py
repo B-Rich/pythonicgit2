@@ -14,6 +14,10 @@ class Repository(object):
         return (b[len(prefix):] for b in self._raw_repo.listall_references()
             if b.startswith(prefix))
 
+    def ref_dict(self, ref_iter):
+        return dict(((r, self._raw_repo.lookup_reference(r).hex)
+                     for r in ref_iter))
+
     def branches_iter(self):
         return self.ref_iter('refs/heads/')
 
@@ -21,8 +25,7 @@ class Repository(object):
         return [b for b in self.branches_iter]
 
     def branches_dict(self):
-        return dict(((b[11:], self._raw_repo.lookup_reference(b).hex)
-                    for b in self.branches_iter))
+        return self.ref_dict(self.branches_iter())
 
     def tags_iter(self):
         return self.ref_iter('refs/tags/')
