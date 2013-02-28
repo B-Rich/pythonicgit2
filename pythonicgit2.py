@@ -12,7 +12,7 @@ class Repository(object):
         return Repository(raw.path)
 
     def ref_iter(self, prefix):
-        return (b[len(prefix):] for b in self._raw_repo.listall_references()
+        return (b for b in self._raw_repo.listall_references()
                 if b.startswith(prefix))
 
     def ref_dict(self, ref_iter):
@@ -21,11 +21,11 @@ class Repository(object):
 
     @property
     def branches_iter(self):
-        return self.ref_iter('refs/heads/')
+        return (b for b in self.ref_iter('refs/heads/'))
 
     @property
     def branches(self):
-        return [b for b in self.branches_iter]
+        return [b[11:] for b in self.branches_iter]
 
     @property
     def branches_dict(self):
@@ -33,11 +33,11 @@ class Repository(object):
 
     @property
     def tags_iter(self):
-        return self.ref_iter('refs/tags/')
+        return (t for t in self.ref_iter('refs/tags/'))
 
     @property
     def tags(self):
-        return [t for t in self.tags_iter]
+        return [t[10:] for t in self.tags_iter]
 
     @property
     def tags_dict(self):
