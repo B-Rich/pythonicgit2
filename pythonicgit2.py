@@ -18,20 +18,26 @@ class Repository(object):
         return dict(((r, self._raw_repo.lookup_reference(r).hex)
                      for r in ref_iter))
 
+    @property
     def branches_iter(self):
         return self.ref_iter('refs/heads/')
 
+    @property
     def branches(self):
         return [b for b in self.branches_iter]
 
+    @property
     def branches_dict(self):
         return self.ref_dict(self.branches_iter())
 
+    @property
     def tags_iter(self):
         return self.ref_iter('refs/tags/')
 
+    @property
     def tags(self):
         return [t for t in self.tags_iter]
 
+    @property
     def tags_dict(self):
         return self.ref_dict(self.tags_iter())
