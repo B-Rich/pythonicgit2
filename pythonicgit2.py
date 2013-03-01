@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim :set ft=py:
 
-""" Highly experimental pythonic wrapper for libgit2 layer on pygit2. """
+""" Highly experimental pythonic wrapper for libgit2, layered on pygit2. """
 
 import pygit2 as pg2
 
