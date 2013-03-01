@@ -123,7 +123,6 @@ def test():
         def __init__(self, hex):
             self.hex = hex
 
-
     mock_raw = MockRawRepo()
     repo = Repository('nopath', raw_repo=mock_raw)
     nt.assert_equal(repo.branches, ['master'])
