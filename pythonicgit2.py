@@ -114,14 +114,22 @@ def test():
 
         def lookup_reference(self, ref):
             if ref == 'refs/heads/master':
-                return 'c0ffee'
+                return MockRef('c0ffee')
             elif ref == 'refs/tags/v1.0':
-                return 'badbabe'
+                return MockRef('badbabe')
+
+    class MockRef(object):
+
+        def __init__(self, hex):
+            self.hex = hex
+
 
     mock_raw = MockRawRepo()
     repo = Repository('nopath', raw_repo=mock_raw)
     nt.assert_equal(repo.branches, ['master'])
+    nt.assert_equal(repo.branches_dict, {'master': 'c0ffee'})
     nt.assert_equal(repo.tags, ['v1.0'])
+    nt.assert_equal(repo.tags_dict, {'v1.0': 'badbabe'})
 
 if __name__ == "__main__":
     test()
