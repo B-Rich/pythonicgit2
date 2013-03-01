@@ -8,7 +8,7 @@ import pygit2 as pg2
 
 __author__ = "Valentin Haenel <valentin.haenel@gmx.de>"
 __copyright__ = "2013"
-__licence__  = """© %s %s
+__licence__ = """© %s %s
 
 Pythonicgit2 is licenced under the terms of the MIT License.
 
