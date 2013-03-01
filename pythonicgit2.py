@@ -50,11 +50,11 @@ def shorten_tag_ref(tag_ref):
 
 class Repository(object):
 
-    def __init__(self, path):
-        self._raw_repo = pg2.Repository(path)
+    def __init__(self, path, raw_repo=None):
+        self._raw_repo = pg2.Repository(path)if raw_repo is None else raw_repo
 
     @staticmethod
-    def create(path, bare=False):
+    def create(path, bare=False, ):
         raw = pg2.init_repository(path, bare)
         return Repository(raw.path)
 
@@ -98,3 +98,30 @@ class Repository(object):
     @property
     def tags_dict(self):
         return self.ref_dict(self.tag_ref_iter, shorten=shorten_tag_ref)
+
+
+def test():
+
+    import nose.tools as nt
+
+    class MockRawRepo(object):
+
+        def __init__(self):
+            self.path = '/tmp/foo/bar'
+
+        def listall_references(self):
+            return ['refs/heads/master', 'refs/tags/v1.0']
+
+        def lookup_reference(self, ref):
+            if ref == 'refs/heads/master':
+                return 'c0ffee'
+            elif ref == 'refs/tags/v1.0':
+                return 'badbabe'
+
+    mock_raw = MockRawRepo()
+    repo = Repository('nopath', raw_repo=mock_raw)
+    nt.assert_equal(repo.branches, ['master'])
+    nt.assert_equal(repo.tags, ['v1.0'])
+
+if __name__ == "__main__":
+    test()
