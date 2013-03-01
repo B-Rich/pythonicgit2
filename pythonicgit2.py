@@ -1,5 +1,21 @@
 import pygit2 as pg2
 
+REF_PREFIX = "refs/"
+HEADS_PREFIX = REF_PREFIX + "heads/"
+TAGS_PREFIX = REF_PREFIX + "tags/"
+
+
+def shorten_ref(ref, prefix_len):
+    return ref[prefix_len:]
+
+
+def shorten_head(head):
+    return shorten_ref(head, len(HEADS_PREFIX))
+
+
+def shorten_tag_ref(tag_ref):
+    return shorten_ref(tag_ref, len(TAGS_PREFIX))
+
 
 class Repository(object):
 
@@ -15,30 +31,39 @@ class Repository(object):
         return (b for b in self._raw_repo.listall_references()
                 if b.startswith(prefix))
 
-    def ref_dict(self, ref_iter):
-        return dict(((r, self._raw_repo.lookup_reference(r).hex)
+    def ref_dict(self, ref_iter, shorten=None):
+        return dict(((r if shorten is None else shorten(r),
+                     self._raw_repo.lookup_reference(r).hex)
                      for r in ref_iter))
 
     @property
+    def heads_iter(self):
+        return self.ref_iter(HEADS_PREFIX)
+
+    @property
     def branches_iter(self):
-        return (b for b in self.ref_iter('refs/heads/'))
+        return (shorten_head(b) for b in self.heads_iter)
 
     @property
     def branches(self):
-        return [b[11:] for b in self.branches_iter]
+        return [b for b in self.branches_iter]
 
     @property
     def branches_dict(self):
-        return self.ref_dict(self.branches_iter)
+        return self.ref_dict(self.heads_iter, shorten=shorten_head)
+
+    @property
+    def tag_ref_iter(self):
+        return self.ref_iter(TAGS_PREFIX)
 
     @property
     def tags_iter(self):
-        return (t for t in self.ref_iter('refs/tags/'))
+        return (shorten_tag_ref(t) for t in self.tag_ref_iter)
 
     @property
     def tags(self):
-        return [t[10:] for t in self.tags_iter]
+        return [t for t in self.tags_iter]
 
     @property
     def tags_dict(self):
-        return self.ref_dict(self.tags_iter)
+        return self.ref_dict(self.tag_ref_iter, shorten=shorten_tag_ref)
